@@ -1,0 +1,7 @@
+# Auto detect text files and perform LF normalizationaudios/
+corpus_normalizado/
+*.wav
+*.mp3
+.venv/
+__pycache__/
+*.pyc
