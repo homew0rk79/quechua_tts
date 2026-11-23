@@ -1,10 +1,10 @@
-# qtts_trainable
+# quechua_tts
  
 Código y resultados de la tesis **Reconocimiento automático del habla (ASR) para la transcripción del quechua de Abancay**, Ingeniería Informática, PUCP (2026).
  
-Este repositorio cubre el **Objetivo 1** (corpus curado y partición) y el **Objetivo 2** (selección de modelo y línea base). El ajuste fino (O3) y la evaluación final (O4) se agregarán después.
+Este repositorio cubre los cuatro objetivos de la tesis: el corpus curado y su partición (O1), la selección del modelo y la línea base (O2), el ajuste fino (O3) y la evaluación objetiva y subjetiva del modelo resultante (O4).
  
-> **Datos:** el corpus de audio es privado y **no se incluye** en el repositorio (`.gitignore`). Los CSV de particiones y de predicciones sí están, porque contienen las transcripciones y los resultados, no el audio.
+> **Datos:** el corpus de audio es privado y **no se incluye** en el repositorio (`.gitignore`). Los CSV de particiones y de predicciones sí están, porque contienen las transcripciones y los resultados, no el audio. Los pesos del modelo ajustado tampoco se incluyen por su tamaño; se conservan en el servidor de cómputo institucional (`runs/C1/final`).
  
 ---
  
@@ -17,17 +17,22 @@ Este repositorio cubre el **Objetivo 1** (corpus curado y partición) y el **Obj
 | O2 | R2.1 | Comparación de modelos candidatos (zero-shot sobre validación) | `R2.1/` | Completado |
 | O2 | R2.2 | Configuración de hiperparámetros del ajuste fino | `R2.2/` | Completado |
 | O2 | R2.3 | Línea base zero-shot sobre prueba | `R2.3/` | Completado |
+| O3 | R3.1 | Modelo ajustado (C1), entrenado hasta convergencia | `R3.1/` | Completado |
+| O3 | R3.2 | Bitácora de experimentos (C1, C2, C3) y configuración final | `R3.2/` | Completado |
+| O4 | R4.1 | WER y CER del modelo ajustado sobre prueba frente a la línea base | `R4.1/` | Completado |
+| O4 | R4.2 | Evaluación subjetiva con hablantes nativos del quechua de Abancay | `R4.2/` | Completado |
+| O4 | R4.3 | Categorización de errores y recomendaciones | `R4.3/` | Completado |
  
 ---
  
 ## 2. Estructura del repositorio
  
 ```
-qtts_trainable/
+quechua_tts/
 ├── README.md
-├── requirements.txt
 ├── qtts_trainable.xlsx          # transcripciones y estado de cada audio
 ├── R1.1/                        # auditoría, análisis de duraciones y partición
+│   ├── qtts_trainable_analisis_manual.csv   # registro de la revisión manual (2 312 archivos)
 │   ├── analisis_duraciones.py
 │   ├── particion_train_val_test.py
 │   ├── particiones/             # train.csv, val.csv, test.csv, reporte_particion.csv
@@ -36,11 +41,33 @@ qtts_trainable/
 │   ├── normalizacion.py
 │   └── log_normalizacion.csv
 ├── R2.1/                        # predicciones zero-shot sobre validación
-│   └── zs_romero_val.csv, zs_mms_quy_val.csv, zs_mms_quz_val.csv
-├── R2.2/                        # normalización de texto y evaluador, configuraciones
+│   └── zs_romero_val.csv, zs_mms_quy_val.csv, zs_mms_quz_val.csv, zs_whisper_val.csv
+├── R2.2/                        # normalización de texto, evaluador y configuraciones
 │   ├── text_norm.py
-│   └── eval_zeroshot.py
-└── R2.3/                        # predicciones zero-shot sobre prueba (línea base)
+│   ├── eval_zeroshot.py
+│   └── configs/                 # C1.yaml, C2.yaml, C3.yaml
+├── R2.3/                        # predicciones zero-shot sobre prueba (línea base)
+│   └── zs_romero_test.csv
+├── R3.1/                        # ajuste fino de C1 y prueba de carga e inferencia
+│   ├── train.py, graficar_curvas.py
+│   ├── trainer_state_C1.json, curvas_C1.csv, curvas_C1.png
+│   └── pred_val_C1.csv
+├── R3.2/                        # bitácora y resultados por configuración
+│   ├── bitacora_R3.2.md
+│   ├── analizar_pred.py, graficar_curvas.py, comparacion.png
+│   └── C1/, C2/, C3/, C1_v0/, C2_cancelada/   # config_usada.yaml, metricas_val.json, predicciones, ...
+├── R4.1/                        # evaluación final sobre prueba
+│   ├── evaluar_prueba.py
+│   ├── pred_test.csv, zs_romero_test.csv
+│   └── tabla_global.csv, por_fuente.csv, bootstrap.csv
+├── R4.2/                        # evaluación subjetiva
+│   ├── preparar_items.py, app.py, response_store.py, analizar_r42.py
+│   ├── items/                   # items.csv, estratos.json, lista_audios.txt
+│   └── resultados/              # resumen.json, por_item.csv, por_estrato.csv, post_edicion.csv
+│       └── recopilados/         # E2.jsonl, E4.jsonl, E6.jsonl, E7.jsonl
+└── R4.3/                        # análisis de errores
+    ├── categorizar_errores.py
+    └── resultados/              # operaciones.csv, categorias_sustitucion.csv, castellano_vs_quechua.csv, segmentacion.csv
 ```
  
 ---
@@ -77,7 +104,7 @@ python R1.2/normalizacion.py
  
 ### 4.3 R1.1: auditoría, análisis de duraciones y partición
  
-**Auditoría y revisión manual.** Se detectaron archivos corruptos, anómalos o vacíos, y se revisó manualmente una muestra para descartar audios que no fueran quechua o cuya transcripción no estuviera alineada. El estado de cada audio está en `qtts_trainable.xlsx`.
+**Auditoría y revisión manual.** Se revisó manualmente la totalidad de los 2 312 archivos, escuchando cada grabación y contrastándola con su transcripción, para descartar audios que no fueran quechua o cuya transcripción no estuviera alineada. La auditoría automatizada detectó además archivos corruptos, duraciones anómalas y duplicados. El estado de cada audio está en `R1.1/qtts_trainable_analisis_manual.csv` y en `qtts_trainable.xlsx`.
  
 **Análisis de duraciones** (`R1.1/analisis_duraciones.py`): calcula la duración de cada archivo y genera `salida_duraciones/` con el resumen por categoría, escenarios de umbral y el histograma de duraciones.
  
@@ -175,9 +202,91 @@ Modelo de Romero sin ajuste fino sobre la partición de prueba (258 archivos): *
  
 - **C2:** igual a C1, pero partiendo de `facebook/wav2vec2-xls-r-300m` (mide el aporte del quechua previo).
 - **C3:** la mejor entre C1 y C2, con dropout 0,2 en atención, oculta y `feat_proj`.
+
+En la versión 5.18 de `transformers`, `group_by_length` se configura con `train_sampling_strategy: group_by_length` (cambio de nombre de la API, mismo comportamiento).
+
+---
+
+## 6. Objetivo 3: ajuste fino
+
+### 6.1 R3.1: modelo ajustado (`R3.1/train.py`)
+
+Lee la configuración YAML, aplica `text_norm.normalizar`, construye el vocabulario (37 símbolos) desde la partición de entrenamiento, reinicializa la cabeza CTC y entrena. Solo usa entrenamiento y validación.
+
+```bash
+python R3.1/train.py --config R2.2/configs/C1.yaml --prueba_memoria   # un paso con el lote más largo
+python R3.1/train.py --config R2.2/configs/C1.yaml                    # entrenamiento completo
+python R3.1/graficar_curvas.py C1 --linea_base 41.81 8.29              # curvas de pérdida y WER/CER
+```
+
+- 30 épocas (1 680 pasos); mejor checkpoint en la época 28; pérdida de validación 0,270.
+- **Prueba de carga e inferencia:** el modelo final se cargó desde su directorio y se evaluó con `eval_zeroshot.py` sobre validación (`pred_val_C1.csv`): WER 25,94 % y CER 5,09 % en la partición completa, frente a 25,79 % y 5,12 % calculados durante el entrenamiento.
+
+### 6.2 R3.2: comparación de configuraciones (validación)
+
+Cada modelo final se evaluó con `eval_zeroshot.py`, y `R3.2/analizar_pred.py` desagrega las métricas por subconjunto y por fuente.
+
+| Config. | Pérdida val. | WER sin contaminadas | CER sin contaminadas | WER completo | CER completo |
+|---|---|---|---|---|---|
+| C1 (Romero, base) | 0,270 | **27,88** | **5,54** | **25,94** | **5,09** |
+| C2 (XLS-R-300M base) | 0,304 | 35,47 | 6,61 | 33,79 | 6,24 |
+| C3 (C1 + dropout 0,2) | 0,290 | 32,33 | 6,20 | 30,27 | 5,72 |
+
+**Configuración final: C1.** El razonamiento completo, junto con las corridas `C1_v0` (métrica corregida) y `C2_cancelada`, está en `R3.2/bitacora_R3.2.md`.
+
+---
+
+## 7. Objetivo 4: evaluación
+
+Las fuentes contaminadas (`01 TAQAQA RUNA`, `02 TAQAQA RUNAS`, `05_11-20 RUTA QUECHUA`) se excluyen de la medida principal, porque el checkpoint de Romero las transcribe casi sin error.
+
+### 7.1 R4.1: métricas sobre prueba (`R4.1/evaluar_prueba.py`)
+
+La partición de prueba se evaluó **una sola vez** con el modelo final de R3.1. Las predicciones se generaron con `eval_zeroshot.py` (`pred_test.csv`); la línea base reutiliza las de R2.3. `evaluar_prueba.py` no ejecuta ningún modelo: compara ambos archivos y calcula un bootstrap pareado (10 000 remuestras, semilla 42).
+
+```bash
+python R4.1/evaluar_prueba.py --c1 R4.1/pred_test.csv --base R4.1/zs_romero_test.csv \
+    --train_csv R1.1/particiones/train.csv --out R4.1
+```
+
+| Subconjunto | Archivos | WER línea base | WER ajustado | CER línea base | CER ajustado |
+|---|---|---|---|---|---|
+| **Sin contaminadas** | 221 | 42,64 | **30,84** | 8,43 | **5,82** |
+| Completo | 258 | 39,21 | 29,84 | 7,64 | 5,58 |
+| Fuentes no vistas | 92 | 46,32 | 34,90 | 9,97 | 6,90 |
+| Solo contaminadas | 37 | 1,44 | 18,77 | 0,26 | 3,36 |
+
+Reducción del WER sin contaminadas: **11,8 puntos (IC 95 %: 9,5 a 14,1)**.
+
+### 7.2 R4.2: evaluación subjetiva (`R4.2/`)
+
+- `preparar_items.py` selecciona 18 ítems del modelo (6 por estrato de WER) y 6 controles con la transcripción humana, del subconjunto de prueba sin contaminadas.
+- `app.py` es la aplicación Gradio del cuestionario. No ejecuta el modelo: muestra las transcripciones precalculadas.
+- `analizar_r42.py` aplica la regla de decisión, fijada antes de analizar las respuestas.
+
+```bash
+python R4.2/preparar_items.py --pred R4.1/pred_test.csv --out R4.2/items --seed 42
+python R4.2/analizar_r42.py --respuestas R4.2/resultados/recopilados --items R4.2/items/items.csv \
+    --estratos R4.2/items/estratos.json --out R4.2/resultados
+```
+
+Tres evaluadores completaron los 24 ítems. El 100 % de los ítems del modelo resultó aceptable, con una mediana de utilidad de 5. La concordancia (alfa de Krippendorff: 0,21 en utilidad y 0,29 en inteligibilidad) quedó por debajo de 0,4, por lo que el veredicto es **satisfactorio con cautela**. Las respuestas no contienen datos que identifiquen a los evaluadores.
+
+### 7.3 R4.3: análisis de errores (`R4.3/categorizar_errores.py`)
+
+```bash
+python R4.3/categorizar_errores.py --pred R4.1/pred_test.csv --out R4.3/resultados
+```
+
+Sobre el subconjunto sin contaminadas (221 grabaciones, 3 051 palabras):
+
+- 84,7 % de los errores son sustituciones.
+- Las sustituciones se concentran en cambios de sufijo sobre una raíz correcta (28,5 %), en variaciones ortográficas y en palabras de origen castellano (14,7 %).
+- Las palabras castellanas tienen más error que las quechuas: 36,2 % frente a 27,8 %.
+
 ---
  
-## 6. Convenciones de trabajo
+## 8. Convenciones de trabajo
  
 - Las decisiones se toman con **validación**; la prueba se usa una sola vez por modelo.
 - **Misma normalización** (`text_norm.py`) en entrenamiento y evaluación.
