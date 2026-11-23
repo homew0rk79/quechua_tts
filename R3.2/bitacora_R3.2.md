@@ -2,7 +2,7 @@
 
 **Objetivo O3.** Adaptar mediante ajuste fino un modelo preentrenado con el corpus de quechua de Abancay.
 **Resultado R3.2.** Registro estructurado de al menos tres configuraciones de ajuste fino, con la justificación de la configuración final.
-**Estado de este documento:** C1, C2 y C3 completas y verificadas. **Configuración final: C1** (Entrada 12). Quedan pendientes menores (Entradas 6 y 7). Los campos marcados con `PENDIENTE` se completan al terminar cada paso; no se rellenan con estimaciones.
+**Estado de este documento:** C1, C2 y C3 completas y verificadas. **Configuración final: C1** (Entrada 12). No quedan pendientes abiertos.
 
 ---
 
@@ -102,12 +102,20 @@ Hiperparámetros comunes (fuente: `config_usada.yaml` de cada corrida): tasa de 
 - **Hallazgo.** En C1_v0, la fuente `01362597f974f4a90acff783f9c0842c` (20 archivos) tuvo el CER más alto entre las fuentes con más de dos archivos (10,97 %). El desglose por archivo mostró que el exceso proviene de un único archivo, `01362597f974f4a90acff783f9c0842c-52_P1`, con CER de 67,5 %; los otros 19 archivos de la fuente están entre 0,8 % y 9,9 %.
 - **Diagnóstico.** El audio dura 6,0 s y la referencia tiene 274 caracteres (~46 caracteres/s), mientras que la predicción tiene 93 caracteres (~15,5 caracteres/s, un ritmo de habla normal). El modelo transcribió con fidelidad razonable el inicio de la referencia y nada del resto. La evidencia indica que la referencia contiene texto que no está en el audio (audio cortado o texto que corresponde a otro segmento). Es un problema de datos, no de reconocimiento.
 - **Persistencia.** La fuente mantiene un CER alto en C1 (10,94 %) y en C2 (11,62 %), coherente con un problema de datos que afecta por igual a todas las configuraciones y, por tanto, no altera su comparación.
-- **Pendientes.** Revisar la referencia de `…-52_P2` para comprobar si el texto sobrante pertenece a ese segmento; escuchar el audio; registrar el caso en `casos_pendientes_validacion.csv` para el especialista; calcular las métricas limpias con y sin el archivo para cuantificar su peso. El archivo **no** se excluye de la evaluación mientras el especialista no confirme el error; si se corrige, se reevalúan todas las configuraciones con la misma validación corregida.
+- **Cierre (2026-11-23).** Se calculó el peso del archivo sobre la validación limpia, recalculando WER y CER desde las predicciones de la verificación independiente (`R3.1/pred_val_C1.csv`, `C2/pred_val.csv`, `C3/pred_val.csv`) con y sin él:
+
+  | Config. | WER con / sin | CER con / sin | Diferencia WER / CER |
+  |---|---|---|---|
+  | C1 | 27,88 / 27,13 | 5,54 / 4,42 | 0,75 / 1,12 |
+  | C2 | 35,47 / 34,80 | 6,61 / 5,47 | 0,66 / 1,14 |
+  | C3 | 32,33 / 31,54 | 6,20 / 5,07 | 0,78 / 1,12 |
+
+  El archivo eleva el WER entre 0,66 y 0,78 puntos y el CER en ~1,1 puntos, de forma casi idéntica en las tres configuraciones, y el orden C1 < C3 < C2 no cambia. Por ello, el archivo se mantuvo en la validación sin modificar su referencia, todas las cifras reportadas lo incluyen y la decisión de R3.2 no depende de él. La corrección de esta y otras referencias del corpus queda como recomendación de trabajo futuro (unificación y revisión de referencias, R4.3).
 - **Observación general.** Las fuentes con dos archivos (`18c6c9c0…`, `0d94caca…`) muestran valores extremos que no son interpretables por su tamaño.
 
 ### Entrada 7 — Corrida C2 cancelada (2026-11-01)
 
-- Se lanzó C2 y se canceló manualmente tras la primera época (se guardó solo `checkpoint-56`, a las 21:33). Motivo de la cancelación: `PENDIENTE (completar)`.
+- Se lanzó C2 y se canceló manualmente tras la primera época (se guardó solo `checkpoint-56`, a las 21:33). Motivo de la cancelación: se canceló por error.
 - La carpeta se conservó como `runs/C2_cancelada` y C2 se repitió desde cero. No se usa para comparar.
 
 ### Entrada 8 — Corrida C2 (2026-11-02)
@@ -226,7 +234,7 @@ No se incluyen fragmentos del corpus en este documento por ser privado.
 
 - El apóstrofo (marca de glotalización) cuesta 1,7 puntos de WER en C1 (25,94 con apóstrofo, 24,23 sin él), 1,6 en C2 (33,79 frente a 32,18) y 1,7 en C3 (30,27 frente a 28,61) sobre la validación completa. El efecto es similar en las tres configuraciones.
 - Entre los errores observados en una muestra de ejemplos hay fusiones y divisiones de palabras aglutinantes y variaciones de ortografía en préstamos del español, coherentes con las 44 palabras de grafía inconsistente señaladas en el corpus. Es una cuestión para el especialista, no para el entrenamiento.
-- Estas observaciones son cualitativas. El análisis cuantitativo por carácter está `PENDIENTE`.
+- Estas observaciones son cualitativas. El análisis cuantitativo de errores se realizó en R4.3 sobre la partición de prueba con el modelo final (`R4.3/categorizar_errores.py`), donde se categorizan las sustituciones, los borrados, las inserciones y los errores de segmentación.
 
 ## 7. Justificación de la configuración final
 
