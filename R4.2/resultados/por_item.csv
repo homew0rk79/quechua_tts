@@ -1,0 +1,25 @@
+item_id,tipo,estrato,fuente,wer_item,n_eval,inteligibilidad_med,utilidad_med,utilidad_media,corregido_por,segundos_med,aceptable
+I01,modelo,medio,05a8cb111e0791b950a61f9e579c9bae,33.33,3,4.0,4.0,4.0,0,149.9,True
+I02,modelo,alto,05a8cb111e0791b950a61f9e579c9bae,78.57,3,4.0,4.0,4.0,0,77.1,True
+I03,modelo,bajo,005a005989303ada8a755b7af6db785c,15.79,3,5.0,5.0,4.666666666666667,0,81.7,True
+I04,modelo,alto,15 NARRA MINEDU,40.0,3,5.0,5.0,4.666666666666667,1,74.5,True
+I05,modelo,medio,14 NARRA MINEDU,25.0,3,5.0,5.0,5.0,0,62.2,True
+I06,modelo,medio,005a005989303ada8a755b7af6db785c,20.83,3,5.0,5.0,5.0,0,54.6,True
+I07,modelo,medio,07 ACADEMICOS,22.22,3,5.0,4.0,4.333333333333333,0,64.7,True
+I08,modelo,bajo,05a8cb111e0791b950a61f9e579c9bae,12.5,3,4.0,4.0,4.333333333333333,0,90.7,True
+I09,modelo,alto,13 NARRA MINEDU,50.0,3,5.0,5.0,5.0,0,72.7,True
+I10,modelo,bajo,08 ACADEMICOS,10.0,3,5.0,5.0,5.0,0,59.9,True
+I11,modelo,bajo,10 ISIDORA AHORRADORA,20.0,3,5.0,4.0,4.0,1,66.0,True
+I12,modelo,medio,13 NARRA MINEDU,27.27,3,5.0,5.0,4.666666666666667,1,61.2,True
+I13,control,control:medio,005a005989303ada8a755b7af6db785c,27.27,3,5.0,5.0,4.666666666666667,0,81.0,True
+I14,modelo,bajo,17 CONSTITUCION,12.0,3,5.0,4.0,4.333333333333333,0,85.8,True
+I15,modelo,bajo,11 ISIDORA AHORRADORA,16.67,3,5.0,5.0,5.0,0,63.1,True
+I16,control,control:alto,14 NARRA MINEDU,43.75,3,5.0,4.0,3.6666666666666665,1,94.9,True
+I17,modelo,alto,005a005989303ada8a755b7af6db785c,50.0,3,5.0,5.0,5.0,0,46.6,True
+I18,modelo,alto,17 CONSTITUCION,58.33,3,4.0,4.0,3.6666666666666665,0,97.2,True
+I19,control,control:alto,05a8cb111e0791b950a61f9e579c9bae,47.83,3,5.0,4.0,4.333333333333333,0,124.3,True
+I20,control,control:bajo,17 CONSTITUCION,10.0,3,4.0,4.0,4.333333333333333,0,140.8,True
+I21,modelo,medio,09 ACADEMICOS,26.67,3,5.0,5.0,5.0,0,54.6,True
+I22,control,control:medio,16 CONSTITUCION,25.0,3,5.0,5.0,4.666666666666667,1,49.5,True
+I23,modelo,alto,11 ISIDORA AHORRADORA,40.0,3,4.0,4.0,3.6666666666666665,0,72.2,True
+I24,control,control:bajo,15 NARRA MINEDU,0.0,3,5.0,5.0,5.0,0,27.4,True

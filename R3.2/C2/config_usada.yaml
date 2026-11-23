@@ -1,0 +1,62 @@
+# =====================================================================
+# C2 — Variación del modelo de partida (R2.2 / R3.2)
+# Modelo de partida: XLS-R-300M base, sin preentrenamiento en quechua
+# Único cambio respecto a C1: el checkpoint de partida
+# Cada valor está sustentado en la tabla de configuración de R2.2.
+# =====================================================================
+experimento: C2
+descripcion: "Igual a C1, partiendo de XLS-R-300M base"
+
+modelo:
+  checkpoint: ~/tesis/models/xls-r-300m       # facebook/wav2vec2-xls-r-300m  <-- CAMBIO
+  vocabulario: nuevo                          # construido desde train normalizado
+  reinicializar_cabeza_ctc: true
+  congelar_extractor_convolucional: true
+
+datos:
+  train_csv: ~/tesis/data/particiones/train.csv
+  val_csv: ~/tesis/data/particiones/val.csv
+  audio_root: ~/tesis/data/corpus_normalizado
+  frecuencia_muestreo: 16000
+  normalizacion: text_norm.normalizar        # conserva el apóstrofo
+  # Fuentes memorizadas por el checkpoint de Romero (detectadas en R2.1 / R2.3).
+  # Se excluyen de la validación usada para elegir el mejor checkpoint,
+  # en todas las configuraciones, para que C1 y C2 se comparen sin sesgo.
+  fuentes_excluidas_eval:
+    - "01 TAQAQA RUNA"
+    - "02 TAQAQA RUNAS"
+    - "05_11-20 RUTA QUECHUA"
+
+config_modelo:                               # sobrescribe la config del checkpoint
+  attention_dropout: 0.1
+  hidden_dropout: 0.1
+  activation_dropout: 0.1
+  feat_proj_dropout: 0.0
+  layerdrop: 0.1
+  mask_time_prob: 0.05
+  mask_time_length: 10
+  ctc_loss_reduction: mean
+  ctc_zero_infinity: true
+
+entrenamiento:                               # nombres de TrainingArguments (transformers 5.x)
+  output_dir: ~/tesis/runs/C2
+  learning_rate: 1.0e-4
+  lr_scheduler_type: linear
+  warmup_steps: 170
+  per_device_train_batch_size: 16
+  per_device_eval_batch_size: 16
+  gradient_accumulation_steps: 2             # lote efectivo = 32
+  num_train_epochs: 30
+  eval_strategy: epoch
+  save_strategy: epoch
+  save_total_limit: 2
+  load_best_model_at_end: true
+  metric_for_best_model: wer
+  greater_is_better: false
+  logging_steps: 10
+  bf16: true
+  gradient_checkpointing: true
+  train_sampling_strategy: group_by_length
+  dataloader_num_workers: 4
+  seed: 42
+  report_to: tensorboard

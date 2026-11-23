@@ -1,0 +1,9 @@
+subconjunto,archivos,modelo,WER,CER,WER_sin_apostrofo,CER_sin_apostrofo
+Completo,258,Sin ajuste (R2.3),39.21,7.64,38.25,7.43
+Completo,258,Ajustado (C1),29.84,5.58,28.73,5.38
+Sin contaminadas,221,Sin ajuste (R2.3),42.64,8.43,41.63,8.2
+Sin contaminadas,221,Ajustado (C1),30.84,5.82,29.79,5.62
+Solo contaminadas,37,Sin ajuste (R2.3),1.44,0.26,1.08,0.22
+Solo contaminadas,37,Ajustado (C1),18.77,3.36,16.97,3.11
+Fuentes no vistas,92,Sin ajuste (R2.3),46.32,9.97,45.93,9.88
+Fuentes no vistas,92,Ajustado (C1),34.9,6.9,34.07,6.76

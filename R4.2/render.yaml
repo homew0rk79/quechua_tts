@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: r42-evaluacion
+    runtime: python
+    plan: free
+    rootDir: R4.2
+    buildCommand: pip install --only-binary=:all: -r requirements.txt
+    startCommand: python app.py
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: GRADIO_ANALYTICS_ENABLED
+        value: "False"
+      - key: REPO_AUDIOS
+        value: homew0rk79/r42-audios
+      - key: REPO_RESPUESTAS
+        value: homew0rk79/r42-respuestas
+      - key: HF_TOKEN
+        sync: false
+      - key: CODIGOS
+        sync: false

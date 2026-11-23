@@ -57,7 +57,7 @@ entrenamiento:                               # nombres de TrainingArguments (tra
   logging_steps: 10
   bf16: true
   gradient_checkpointing: true
-  group_by_length: true
+  train_sampling_strategy: group_by_length
   dataloader_num_workers: 4
   seed: 42
   report_to: tensorboard

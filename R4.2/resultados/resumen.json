@@ -1,0 +1,32 @@
+{
+  "veredicto": "Satisfactorio (con cautela)",
+  "condiciones_de_validez_incumplidas": [
+    "concordancia baja en utilidad (alfa = 0.21 < 0.4)"
+  ],
+  "pct_aceptables_ponderado": 100.0,
+  "pct_aceptables_simple": 100.0,
+  "utilidad_mediana_modelo": 5.0,
+  "utilidad_mediana_control": 4.5,
+  "inteligibilidad_mediana_modelo": 5.0,
+  "inteligibilidad_mediana_control": 5.0,
+  "brecha_utilidad_media_control_menos_modelo": -0.07,
+  "alfa_krippendorff_utilidad": 0.207,
+  "alfa_krippendorff_inteligibilidad": 0.285,
+  "spearman_wer_vs_utilidad": {
+    "rho": -0.076,
+    "p": 0.77
+  },
+  "wer_automatico_items_modelo": 28.05,
+  "tipo_error_principal_pct": {
+    "Ninguno": 64.8,
+    "Solo de escritura (la palabra es correcta, pero está mal escrita)": 25.9,
+    "Faltan o sobran palabras": 7.4,
+    "Cambian el significado": 1.9
+  },
+  "regla": {
+    "aceptable": "utilidad mediana >= 4",
+    "satisfactorio": ">= 60 % aceptables (ponderado) y utilidad mediana >= 4",
+    "insuficiente": "< 30 % aceptables o utilidad mediana <= 2",
+    "validez": "control >= 4; alfa >= 0.4"
+  }
+}

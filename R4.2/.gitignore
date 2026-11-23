@@ -1,0 +1,10 @@
+audios/
+datos/
+respuestas/
+resultados/respuestas/
+resultados/.cache/
+resultados/.gitattributes
+.venv*/
+.env*
+__pycache__/
+*.pyc

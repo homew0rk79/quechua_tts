@@ -1,0 +1,5 @@
+subconjunto,archivos,metrica,reduccion_puntos,IC95_inf,IC95_sup,prop_remuestras_sin_mejora
+Sin contaminadas,221,WER,11.799,9.525,14.114,0.0
+Sin contaminadas,221,CER,2.61,2.158,3.061,0.0
+Fuentes no vistas,92,WER,11.413,8.168,14.714,0.0
+Fuentes no vistas,92,CER,3.07,2.402,3.732,0.0

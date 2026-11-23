@@ -1,0 +1,4 @@
+pandas
+jiwer
+krippendorff
+scipy

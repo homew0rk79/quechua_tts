@@ -1,0 +1,16 @@
+{
+ "eval_loss": 0.3037758767604828,
+ "eval_wer": 35.468564650059314,
+ "eval_cer": 6.6517091197043685,
+ "eval_runtime": 3.3646,
+ "eval_samples_per_second": 45.176,
+ "eval_steps_per_second": 2.972,
+ "epoch": 30.0,
+ "eval_completo_loss": 0.2900615334510803,
+ "eval_completo_wer": 33.836098541980896,
+ "eval_completo_cer": 6.291409164300428,
+ "eval_completo_runtime": 4.2386,
+ "eval_completo_samples_per_second": 44.826,
+ "eval_completo_steps_per_second": 2.831,
+ "mejor_checkpoint": "/home/apesantes/tesis/runs/C2/checkpoint-1680"
+}

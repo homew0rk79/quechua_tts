@@ -1,0 +1,10 @@
+{
+  "corte_bajo_medio": 20.28,
+  "corte_medio_alto": 35.71,
+  "poblacion_limpia": {
+    "medio": 75,
+    "bajo": 74,
+    "alto": 72
+  },
+  "semilla": 42
+}
